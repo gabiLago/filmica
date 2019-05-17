@@ -12,18 +12,18 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
 
         val id = intent.getStringExtra("id")
-        val film = FilmsRepo.findFilmById(id)
+        val fragment: DetailFragment = DetailFragment()
 
-        film?.let {
-            labelTitle.text = it.title
-            labelDescription.text = it.overview
-            labelGenres.text = it.genre
-            labelDate.text = it.date
-        }
+        var args = Bundle()
+        args.putString("id", id)
 
-        buttonAdd.setOnClickListener {
-            Toast.makeText(this@DetailActivity, "Añadido al watchlist", Toast.LENGTH_LONG).show()
-        }
+        fragment.arguments = args
+
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container, fragment)
+            .commit()
+
+
 
     }
 }
