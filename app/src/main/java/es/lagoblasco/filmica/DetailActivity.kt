@@ -2,8 +2,8 @@ package es.lagoblasco.filmica
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Button
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
 
@@ -11,9 +11,17 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        val button: Button = findViewById(R.id.button_add)
+        val id = intent.getStringExtra("id")
+        val film = FilmsRepo.findFilmById(id)
 
-        button.setOnClickListener {
+        film?.let {
+            labelTitle.text = it.title
+            labelDescription.text = it.overview
+            labelGenres.text = it.genre
+            labelDate.text = it.date
+        }
+
+        buttonAdd.setOnClickListener {
             Toast.makeText(this@DetailActivity, "Añadido al watchlist", Toast.LENGTH_LONG).show()
         }
 
