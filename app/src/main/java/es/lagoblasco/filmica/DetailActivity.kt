@@ -11,19 +11,19 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        val id = intent.getStringExtra("id")
-        val fragment: DetailFragment = DetailFragment()
+        if (savedInstanceState == null) {
+            val fragment = DetailFragment()
+            val id = intent.getStringExtra("id")
 
-        var args = Bundle()
-        args.putString("id", id)
+            val args = Bundle()
+            args.putString("id", id)
 
-        fragment.arguments = args
+            fragment.arguments = args
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.container, fragment)
-            .commit()
+            supportFragmentManager.beginTransaction()
+                .add(R.id.container, fragment)
+                .commit()
 
-
-
+        }
     }
 }
