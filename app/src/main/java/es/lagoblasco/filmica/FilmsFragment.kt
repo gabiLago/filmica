@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_films.*
+import kotlinx.android.synthetic.main.layout_error.*
 import java.lang.IllegalArgumentException
 
 class FilmsFragment : Fragment() {
@@ -45,23 +46,46 @@ class FilmsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         list.adapter = adapter
+
+        buttonRetry.setOnClickListener { reload() }
+
     }
 
     override fun onResume() {
         super.onResume()
 
+        reload()
+    }
+
+    private fun reload() {
+        showProgress()
+
         FilmsRepo.discoverFilms(context!!,
             { films ->
                 adapter.setFilms(films)
-                progress.visibility = View.INVISIBLE
-                error.visibility = View.INVISIBLE
-                list.visibility = View.VISIBLE
+                showList()
 
             }, { errorRequest ->
-                progress.visibility = View.INVISIBLE
-                list.visibility = View.INVISIBLE
-                error.visibility = View.VISIBLE
+                showError()
             })
+    }
+
+    private fun showList() {
+        filmsProgress.visibility = View.INVISIBLE
+        error.visibility = View.INVISIBLE
+        list.visibility = View.VISIBLE
+    }
+
+    private fun showError() {
+        filmsProgress.visibility = View.INVISIBLE
+        list.visibility = View.INVISIBLE
+        error.visibility = View.VISIBLE
+    }
+
+    private fun showProgress() {
+        filmsProgress.visibility = View.VISIBLE
+        error.visibility = View.INVISIBLE
+        list.visibility = View.INVISIBLE
     }
 
 
