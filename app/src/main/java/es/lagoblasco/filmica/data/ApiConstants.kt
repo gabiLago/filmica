@@ -1,4 +1,4 @@
-package es.lagoblasco.filmica
+package es.lagoblasco.filmica.data
 
 object ApiConstants {
     val genres: Map<Int, String> = mapOf(

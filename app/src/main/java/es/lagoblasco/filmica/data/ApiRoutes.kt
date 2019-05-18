@@ -1,6 +1,7 @@
-package es.lagoblasco.filmica
+package es.lagoblasco.filmica.data
 
 import android.net.Uri
+import es.lagoblasco.filmica.BuildConfig
 
 object ApiRoutes {
 

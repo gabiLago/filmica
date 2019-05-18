@@ -1,4 +1,4 @@
-package es.lagoblasco.filmica
+package es.lagoblasco.filmica.data
 
 import android.content.Context
 import com.android.volley.Request
@@ -26,8 +26,9 @@ object FilmsRepo {
         val request = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
                 val films = Film.parseFilms(response.getJSONArray("results"))
-                this.films.addAll(films)
-                onResponse.invoke(this.films)
+                FilmsRepo.films.clear()
+                FilmsRepo.films.addAll(films)
+                onResponse.invoke(FilmsRepo.films)
             },
             { error ->
                 error.printStackTrace()

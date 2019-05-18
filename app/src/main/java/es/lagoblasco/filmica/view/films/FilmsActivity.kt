@@ -1,9 +1,13 @@
-package es.lagoblasco.filmica
+package es.lagoblasco.filmica.view.films
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
+import es.lagoblasco.filmica.R
+import es.lagoblasco.filmica.data.Film
+import es.lagoblasco.filmica.view.detail.DetailActivity
+import es.lagoblasco.filmica.view.detail.DetailFragment
 
 class FilmsActivity : AppCompatActivity(), FilmsFragment.OnFilmClickListener {
 
@@ -27,7 +31,10 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnFilmClickListener {
             startActivity(intent)
         } else {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container_detail, DetailFragment.newInstance(film.id))
+                .replace(
+                    R.id.container_detail,
+                    DetailFragment.newInstance(film.id)
+                )
                 .commit()
         }
     }

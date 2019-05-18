@@ -1,4 +1,4 @@
-package es.lagoblasco.filmica
+package es.lagoblasco.filmica.view.films
 
 import android.content.Context
 import android.os.Bundle
@@ -7,6 +7,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import es.lagoblasco.filmica.R
+import es.lagoblasco.filmica.data.Film
+import es.lagoblasco.filmica.data.FilmsRepo
+import es.lagoblasco.filmica.view.util.GridOffsetDecoration
 import kotlinx.android.synthetic.main.fragment_films.*
 import kotlinx.android.synthetic.main.layout_error.*
 import java.lang.IllegalArgumentException

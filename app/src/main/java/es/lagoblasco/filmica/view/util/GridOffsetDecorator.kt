@@ -1,9 +1,10 @@
-package es.lagoblasco.filmica
+package es.lagoblasco.filmica.view.util
 
 import android.graphics.Rect
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import es.lagoblasco.filmica.R
 
 class GridOffsetDecoration: RecyclerView.ItemDecoration() {
 

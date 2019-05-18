@@ -1,9 +1,12 @@
-package es.lagoblasco.filmica
+package es.lagoblasco.filmica.view.films
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.squareup.picasso.Picasso
+import es.lagoblasco.filmica.R
+import es.lagoblasco.filmica.data.Film
 import kotlinx.android.synthetic.main.item_film.view.*
 
 class FilmsAdapter(val listener: (Film) -> Unit) :
@@ -16,7 +19,8 @@ class FilmsAdapter(val listener: (Film) -> Unit) :
     }
 
     override fun onCreateViewHolder(recyclerView: ViewGroup, type: Int): FilmViewHolder {
-        val view = LayoutInflater.from(recyclerView.context).inflate(R.layout.item_film,
+        val view = LayoutInflater.from(recyclerView.context).inflate(
+            R.layout.item_film,
             recyclerView,
             false)
 
@@ -44,6 +48,10 @@ class FilmsAdapter(val listener: (Film) -> Unit) :
                         labelTitle.text = it.title
                         labelGenre.text = it.genre
                         labelRating.text = it.rating.toString()
+
+                        Picasso.with(itemView.context)
+                            .load(it.getPosterUrl())
+                            .into(imgPoster)
                     }
                 }
             }
