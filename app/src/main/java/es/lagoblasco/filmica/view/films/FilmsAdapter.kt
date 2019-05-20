@@ -1,5 +1,8 @@
 package es.lagoblasco.filmica.view.films
 
+import android.graphics.Bitmap
+import android.support.v4.content.ContextCompat
+import android.support.v7.graphics.Palette
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +10,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import es.lagoblasco.filmica.R
 import es.lagoblasco.filmica.data.Film
+import es.lagoblasco.filmica.view.util.SimpleTarget
 import kotlinx.android.synthetic.main.item_film.view.*
 
 class FilmsAdapter(val listener: (Film) -> Unit) :
@@ -22,7 +26,8 @@ class FilmsAdapter(val listener: (Film) -> Unit) :
         val view = LayoutInflater.from(recyclerView.context).inflate(
             R.layout.item_film,
             recyclerView,
-            false)
+            false
+        )
 
         return FilmViewHolder(view)
     }
@@ -49,12 +54,36 @@ class FilmsAdapter(val listener: (Film) -> Unit) :
                         labelGenre.text = it.genre
                         labelRating.text = it.rating.toString()
 
-                        Picasso.with(itemView.context)
-                            .load(it.getPosterUrl())
-                            .into(imgPoster)
+                        loadImage(it)
                     }
                 }
             }
+
+        private fun loadImage(it: Film) {
+            val target = SimpleTarget { bitmap: Bitmap ->
+                itemView.imgPoster.setImageBitmap(bitmap)
+                setColor(bitmap)
+            }
+
+            itemView.imgPoster.tag = target
+
+            Picasso.with(itemView.context)
+                .load(it.getPosterUrl())
+                .error(R.drawable.placeholder)
+                .into(target)
+        }
+
+        private fun setColor(bitmap: Bitmap) {
+            Palette.from(bitmap).generate {
+                val defaultColor =
+                    ContextCompat.getColor(itemView.context, R.color.colorPrimary)
+                val swatch = it?.vibrantSwatch ?: it?.dominantSwatch
+                val color = swatch?.rgb ?: defaultColor
+
+                itemView.container.setBackgroundColor(color)
+                itemView.containerData.setBackgroundColor(color)
+            }
+        }
 
         init {
             itemView.setOnClickListener {
