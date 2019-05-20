@@ -12,6 +12,9 @@ import es.lagoblasco.filmica.view.detail.DetailFragment
 import es.lagoblasco.filmica.view.watchlist.WatchlistFragment
 import kotlinx.android.synthetic.main.activity_films.*
 
+const val TAG_FILM = "films"
+const val TAG_WATCHLIST = "watchlist"
+
 class FilmsActivity : AppCompatActivity(), FilmsFragment.OnFilmClickListener {
 
     private lateinit var filmsFragment: FilmsFragment
@@ -23,25 +26,50 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnFilmClickListener {
         setContentView(R.layout.activity_films)
 
         if (savedInstanceState == null) {
-            filmsFragment = FilmsFragment()
-            watchlistFragment = WatchlistFragment()
-            activeFragment = filmsFragment
-
-            supportFragmentManager.beginTransaction()
-                .add(R.id.container, filmsFragment)
-                .add(R.id.container, watchlistFragment)
-                .hide(watchlistFragment)
-                .commit()
+            setupFragments()
+        } else {
+            val tag = savedInstanceState.getString("active", TAG_FILM)
+            restoreFragments(tag)
         }
 
         navigation.setOnNavigationItemSelectedListener {
-            when (it.itemId) { // It's like an if - else statement
+            when (it.itemId) { // It's like a switch statement
                 R.id.action_discover -> showMainFragment(filmsFragment)
                 R.id.action_watchlist -> showMainFragment(watchlistFragment)
             }
 
             true
         }
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("active", activeFragment.tag)
+    }
+
+    private fun setupFragments() {
+        filmsFragment = FilmsFragment()
+        watchlistFragment = WatchlistFragment()
+        activeFragment = filmsFragment
+
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container, filmsFragment, TAG_FILM)
+            .add(R.id.container, watchlistFragment, TAG_WATCHLIST)
+            .hide(watchlistFragment)
+            .commit()
+    }
+
+    private fun restoreFragments(tag: String) {
+        filmsFragment = supportFragmentManager.findFragmentByTag(TAG_FILM) as FilmsFragment
+        watchlistFragment = supportFragmentManager.findFragmentByTag(TAG_WATCHLIST) as WatchlistFragment
+
+        activeFragment =
+            if (tag == TAG_WATCHLIST)
+                watchlistFragment
+            else
+                filmsFragment
+
 
     }
 
