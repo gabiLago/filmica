@@ -61,8 +61,9 @@ class DetailFragment : Fragment() {
 
         buttonAdd.setOnClickListener {
             film?.let {
-                FilmsRepo.saveFilm(context!!, it)
+                FilmsRepo.saveFilm(context!!, it) {
                 Toast.makeText(context, "Añadido al watchlist", Toast.LENGTH_LONG).show()
+                }
             }
 
         }

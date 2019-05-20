@@ -6,6 +6,10 @@ import com.android.volley.Request
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 object FilmsRepo {
 
@@ -34,10 +38,32 @@ object FilmsRepo {
 
     fun saveFilm(
         context: Context,
-        film: Film
+        film: Film,
+        callback: (Film) -> Unit
     ) {
-        val db = getDbInstance(context)
-        db.filmDao().insertFilm(film)
+        GlobalScope.launch(Dispatchers.Main) {
+            val async = async(Dispatchers.IO) {
+                val db = getDbInstance(context)
+                db.filmDao().insertFilm(film)
+            }
+            async.await()
+            callback.invoke(film)
+        }
+    }
+
+    fun getFilms(
+        context: Context,
+        callback: (List<Film>) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val async = async(Dispatchers.IO) {
+                var db = getDbInstance(context)
+                db.filmDao().getFilms()
+            }
+
+            val films = async.await()
+            callback.invoke(films)
+        }
     }
 
     fun discoverFilms(
