@@ -1,39 +1,45 @@
-package es.lagoblasco.filmica.view.films
+package es.lagoblasco.filmica.view.watchlist
 
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import es.lagoblasco.filmica.R
 import es.lagoblasco.filmica.data.Film
 import es.lagoblasco.filmica.view.util.BaseFilmAdapter
 import es.lagoblasco.filmica.view.util.BaseFilmHolder
 import es.lagoblasco.filmica.view.util.SimpleTarget
-import kotlinx.android.synthetic.main.item_film.view.*
+import kotlinx.android.synthetic.main.item_watchlist.view.*
 
-class FilmsAdapter(val listener: (Film) -> Unit) :
-    BaseFilmAdapter<FilmsAdapter.FilmViewHolder>(
-        layoutItem = R.layout.item_film,
-        holderCreator = { view -> FilmViewHolder(view, listener) }
+
+class WatchlistAdapter(val listener: (Film) -> Unit) :
+    BaseFilmAdapter<WatchlistAdapter.WatchlistHolder>(
+        R.layout.item_watchlist,
+        { view -> WatchlistHolder(view, listener) }
     ) {
 
-    class FilmViewHolder(itemView: View, listener: (Film) -> Unit) : BaseFilmHolder(itemView, listener) {
+    class WatchlistHolder(itemView: View, listener: (Film) -> Unit) : BaseFilmHolder(
+        itemView,
+        listener
+    ) {
 
         override fun bindFilm(film: Film) {
             super.bindFilm(film)
 
             with(itemView) {
                 labelTitle.text = film.title
-                labelGenre.text = film.genre
-                labelRating.text = film.rating.toString()
+                labelVotes.text = film.rating.toString()
+                labelOverview.text = film.overview
 
                 loadImage(film)
             }
+
+
         }
+
 
         private fun loadImage(it: Film) {
             val target = SimpleTarget { bitmap: Bitmap ->
@@ -56,11 +62,16 @@ class FilmsAdapter(val listener: (Film) -> Unit) :
                 val swatch = it?.vibrantSwatch ?: it?.dominantSwatch
                 val color = swatch?.rgb ?: defaultColor
 
-                itemView.container.setBackgroundColor(color)
-                itemView.containerData.setBackgroundColor(color)
+                val overlayColor = Color.argb(
+                    (Color.alpha(color) * 0.5).toInt(),
+                    Color.red(color),
+                    Color.green(color),
+                    Color.blue(color)
+                )
+
+                itemView.imgOverlay.setBackgroundColor(overlayColor)
+
             }
         }
-
-
     }
 }
