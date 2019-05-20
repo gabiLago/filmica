@@ -1,5 +1,6 @@
 package es.lagoblasco.filmica.data
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import com.android.volley.Request
 import com.android.volley.VolleyError
@@ -10,11 +11,33 @@ object FilmsRepo {
 
     private val films: MutableList<Film> = mutableListOf()
 
+    private var db: FilmDatabase? = null
+
+    private fun getDbInstance(context: Context): FilmDatabase {
+        if (db == null) {
+            db = Room.databaseBuilder(
+                context,
+                FilmDatabase::class.java,
+                "filmica-db"
+            ).build()
+        }
+
+        return db as FilmDatabase
+    }
+
     fun findFilmById(id: String): Film? {
         return films.find {
             return@find it.id == id
         }
 
+    }
+
+    fun saveFilm(
+        context: Context,
+        film: Film
+    ) {
+        val db = getDbInstance(context)
+        db.filmDao().insertFilm(film)
     }
 
     fun discoverFilms(

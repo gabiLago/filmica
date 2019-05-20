@@ -40,5 +40,4 @@ open class BaseFilmAdapter<VH: BaseFilmHolder>(
         notifyDataSetChanged()
     }
 
-
 }

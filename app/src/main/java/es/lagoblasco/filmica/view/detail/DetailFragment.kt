@@ -21,6 +21,9 @@ import kotlinx.android.synthetic.main.fragment_detail.*
 
 class DetailFragment : Fragment() {
 
+
+    var film: Film? = null
+
     companion object {
         fun newInstance(filId: String): DetailFragment {
             val fragment = DetailFragment()
@@ -44,7 +47,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val id = arguments?.getString("id", "")
-        val film = FilmsRepo.findFilmById(id!!)
+        film = FilmsRepo.findFilmById(id!!)
 
         film?.let {
             labelTitle.text = it.title
@@ -53,11 +56,15 @@ class DetailFragment : Fragment() {
             labelDate.text = it.date
             labelRating.text = it.rating.toString()
 
-            loadImage(film)
+            loadImage(it)
         }
 
         buttonAdd.setOnClickListener {
-            Toast.makeText(context, "Añadido al watchlist", Toast.LENGTH_LONG).show()
+            film?.let {
+                FilmsRepo.saveFilm(context!!, it)
+                Toast.makeText(context, "Añadido al watchlist", Toast.LENGTH_LONG).show()
+            }
+
         }
     }
 
