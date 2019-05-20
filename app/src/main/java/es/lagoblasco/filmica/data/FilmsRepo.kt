@@ -66,6 +66,22 @@ object FilmsRepo {
         }
     }
 
+    fun deleteFilm(
+        context: Context,
+        film: Film,
+        callback: (Film) -> Unit
+    ) {
+       GlobalScope.launch(Dispatchers.Main) {
+           val async = async(Dispatchers.IO) {
+               val db = getDbInstance(context)
+               db.filmDao().deleteFilm(film)
+           }
+
+           async.await()
+           callback.invoke(film)
+       }
+    }
+
     fun discoverFilms(
         context: Context,
         onResponse: (List<Film>) -> Unit,
