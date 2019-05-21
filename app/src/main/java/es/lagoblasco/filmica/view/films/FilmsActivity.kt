@@ -14,12 +14,14 @@ import kotlinx.android.synthetic.main.activity_films.*
 
 const val TAG_FILM = "films"
 const val TAG_WATCHLIST = "watchlist"
+const val TAG_TREND = "trend"
 
 class FilmsActivity : AppCompatActivity(), FilmsFragment.OnFilmClickListener {
 
     private lateinit var filmsFragment: FilmsFragment
     private lateinit var watchlistFragment: WatchlistFragment
     private lateinit var activeFragment: Fragment
+    private lateinit var trendFragment: TrendFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,7 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnFilmClickListener {
             when (it.itemId) { // It's like a switch statement
                 R.id.action_discover -> showMainFragment(filmsFragment)
                 R.id.action_watchlist -> showMainFragment(watchlistFragment)
+                R.id.action_trend -> showMainFragment(trendFragment)
             }
 
             true
@@ -51,22 +54,30 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnFilmClickListener {
     private fun setupFragments() {
         filmsFragment = FilmsFragment()
         watchlistFragment = WatchlistFragment()
+        trendFragment = TrendFragment()
         activeFragment = filmsFragment
 
         supportFragmentManager.beginTransaction()
             .add(R.id.container, filmsFragment, TAG_FILM)
             .add(R.id.container, watchlistFragment, TAG_WATCHLIST)
+            .add(R.id.container, trendFragment, TAG_TREND)
             .hide(watchlistFragment)
+            .hide(trendFragment)
             .commit()
     }
 
     private fun restoreFragments(tag: String) {
         filmsFragment = supportFragmentManager.findFragmentByTag(TAG_FILM) as FilmsFragment
         watchlistFragment = supportFragmentManager.findFragmentByTag(TAG_WATCHLIST) as WatchlistFragment
+        trendFragment = supportFragmentManager.findFragmentByTag(TAG_TREND) as TrendFragment
 
         activeFragment =
             if (tag == TAG_WATCHLIST)
                 watchlistFragment
+
+            else if (tag == TAG_TREND)
+                trendFragment
+
             else
                 filmsFragment
 
