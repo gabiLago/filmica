@@ -36,10 +36,7 @@ class WatchlistAdapter(val listener: (Film) -> Unit) :
 
                 loadImage(film)
             }
-
-
         }
-
 
         private fun loadImage(it: Film) {
             val target = SimpleTarget { bitmap: Bitmap ->

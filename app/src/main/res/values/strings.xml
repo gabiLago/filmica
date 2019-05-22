@@ -14,4 +14,6 @@
     <string name="label_share">Share</string>
     <string name="title_share">Share Film</string>
     <string name="title_trending">Trending Films</string>
+    <string name="title_search">Search</string>
+    <string name="search_for_movies">Search for movies</string>
 </resources>

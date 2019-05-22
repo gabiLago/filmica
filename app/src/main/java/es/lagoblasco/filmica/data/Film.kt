@@ -20,9 +20,9 @@ data class Film(
 ) {
 
     @Ignore
-    constructor(): this("")
+    constructor() : this("")
 
-    fun getPosterUrl() : String {
+    fun getPosterUrl(): String {
         return "https://image.tmdb.org/t/p/w500/${posterId}"
     }
 
@@ -60,7 +60,13 @@ data class Film(
                 genres.add(genre)
             }
 
-            return genres.reduce { acc, genre ->  "$acc | $genre" }
+            // Original code assumed genre field will always have values
+            // on the API response, crashing the app when doesn't.
+            if (genres.size > 0) {
+                return genres.reduce { acc, genre -> "$acc | $genre" }
+            } else {
+                return "No genre"
+            }
 
         }
     }
