@@ -1,6 +1,7 @@
 package es.lagoblasco.filmica.view.films
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -77,7 +78,7 @@ class FilmsActivity : AppCompatActivity(),
             .hide(searchFragment)
             .commit()
 
-        showDetailPlaceholder()
+        //showDetailPlaceholder()
 
     }
 
@@ -129,6 +130,7 @@ class FilmsActivity : AppCompatActivity(),
             intent.putExtra("id", film.id)
             startActivity(intent)
         } else {
+            container_detail.setBackgroundColor(Color.WHITE)
             supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.container_detail,

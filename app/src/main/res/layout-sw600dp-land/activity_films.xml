@@ -22,7 +22,9 @@
                 android:id="@+id/container_detail"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.45" />
+                android:layout_weight="0.45"
+                android:background="@drawable/placeholder"
+        />
     </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView

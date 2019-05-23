@@ -9,9 +9,12 @@
     <EditText
             android:id="@+id/moviesSearchBox"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_search_backgorund"
-            android:drawableLeft="@drawable/ic_search_backgorund"/>
+            android:drawableLeft="@drawable/ic_search_backgorund"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:maxLines="1" />
 
     <FrameLayout
             android:layout_width="match_parent"

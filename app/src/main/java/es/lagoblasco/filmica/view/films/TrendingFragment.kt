@@ -57,16 +57,16 @@ class TrendingFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         reload()
     }
 
     private fun reload() {
         showProgress()
 
+
         FilmsRepo.trendingFilms(context!!,
-            { films ->
-                adapter.setFilms(films)
+            { trendingFilms ->
+                adapter.setFilms(trendingFilms)
                 showList()
 
             }, { errorRequest ->

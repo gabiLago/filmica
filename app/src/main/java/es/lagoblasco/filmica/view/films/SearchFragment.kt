@@ -6,10 +6,12 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 
 import es.lagoblasco.filmica.R
 import es.lagoblasco.filmica.data.Film
@@ -89,11 +91,11 @@ class SearchFragment : Fragment() {
 
                    adapter.setFilms(films)
                    showList()
-                  /* if(films.size > 0) {
+                   if(films.size > 0) {
                        showList()
                    } else {
                        noResults()
-                   }*/
+                   }
 
                }, { errorRequest ->
                    showError()
@@ -111,18 +113,18 @@ class SearchFragment : Fragment() {
         filmsProgress.visibility = View.INVISIBLE
         error.visibility = View.INVISIBLE
         list.visibility = View.INVISIBLE
-        //noResults.visibility = View.INVISIBLE
+        noResults.visibility = View.INVISIBLE
     }
 
     private fun showList() {
         filmsProgress.visibility = View.INVISIBLE
         error.visibility = View.INVISIBLE
         list.visibility = View.VISIBLE
-        //noResults.visibility = View.INVISIBLE
+        noResults.visibility = View.INVISIBLE
     }
 
     private fun noResults() {
-        //noResults.visibility = View.VISIBLE
+        noResults.visibility = View.VISIBLE
         filmsProgress.visibility = View.INVISIBLE
         error.visibility = View.INVISIBLE
         list.visibility = View.INVISIBLE
@@ -132,14 +134,14 @@ class SearchFragment : Fragment() {
         filmsProgress.visibility = View.INVISIBLE
         list.visibility = View.INVISIBLE
         error.visibility = View.VISIBLE
-        //noResults.visibility = View.INVISIBLE
+        noResults.visibility = View.INVISIBLE
     }
 
     private fun showProgress() {
         filmsProgress.visibility = View.VISIBLE
         error.visibility = View.INVISIBLE
         list.visibility = View.INVISIBLE
-        //noResults.visibility = View.INVISIBLE
+        noResults.visibility = View.INVISIBLE
     }
 
 
@@ -148,24 +150,28 @@ class SearchFragment : Fragment() {
     }
 
 
+
+
     private fun moviesSearchListener() {
-        moviesSearchBox.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        /* moviesSearchBox.setOnClickListener {
 
-                if (s.length > 0 && s.subSequence(s.length - 1, s.length)
-                        .toString().equals("\n", ignoreCase = true)
-                ) {  // If enter is pressed
 
-                    query = s.toString()
-                    reload(query)
-                    moviesSearchBox.hideKeyboard()
+            query = moviesSearchBox.text.toString()
 
-                }
-            }
-        })
+            Toast.makeText(context, query, Toast.LENGTH_LONG).show()
+
+            reload(query)
+
+        }*/
+
+        moviesSearchBox.setOnEditorActionListener() { v, actionId, event ->
+            query = moviesSearchBox.text.toString()
+            reload(query)
+            moviesSearchBox.hideKeyboard()
+            true
+        }
     }
+
 
     fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

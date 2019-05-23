@@ -57,7 +57,6 @@ class FilmsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         reload()
     }
 

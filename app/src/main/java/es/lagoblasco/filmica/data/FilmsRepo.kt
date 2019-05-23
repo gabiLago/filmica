@@ -110,6 +110,7 @@ object FilmsRepo {
         onResponse: (List<Film>) -> Unit,
         onError: (VolleyError) -> Unit
     ) {
+
         val url = ApiRoutes.trendingFilmsUrl()
         val request = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
@@ -134,6 +135,7 @@ object FilmsRepo {
         onError: (VolleyError) -> Unit,
         query: String
     ) {
+
         val url = ApiRoutes.searchFilmsUrl(query)
         val request = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
@@ -151,4 +153,5 @@ object FilmsRepo {
         Volley.newRequestQueue(context)
             .add(request)
     }
+
 }
