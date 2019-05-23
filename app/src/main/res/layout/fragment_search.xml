@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <EditText
             android:id="@+id/moviesSearchBox"
             android:layout_width="match_parent"
-            android:layout_height="40sp"
-            android:layout_margin="4dp"
-            android:imeOptions="actionDone"
-            android:hint="@string/search_for_movies"/>
+            android:layout_height="40dp"
+            android:drawableStart="@drawable/ic_search_backgorund"
+            android:drawableLeft="@drawable/ic_search_backgorund"/>
 
-
-    <TextView
-            android:id="@+id/test"
-            android:text="TextView"
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            />
+            android:layout_height="match_parent">
 
-    <FrameLayout android:layout_width="match_parent"
-                 android:layout_height="match_parent">
 
         <ProgressBar
                 android:id="@+id/filmsProgress"
@@ -37,6 +29,15 @@
                 android:id="@+id/error"
                 layout="@layout/layout_error"
                 android:visibility="invisible"/>
+
+        <TextView
+                android:id="@+id/noResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_results"
+                android:visibility="invisible"
+                android:layout_gravity="center"
+                android:textSize="20sp"/>
 
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/listFilms"

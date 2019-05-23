@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
+    <EditText
+            android:id="@+id/moviesSearchBox"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:drawableStart="@drawable/ic_search_backgorund"
+            android:drawableLeft="@drawable/ic_search_backgorund"/>
+
+<FrameLayout
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
@@ -17,6 +28,15 @@
             layout="@layout/layout_error"
             android:visibility="invisible"/>
 
+    <TextView
+            android:id="@+id/noResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_results"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:textSize="20sp"/>
+
     <android.support.v7.widget.RecyclerView
             android:id="@+id/listFilms"
             android:layout_width="match_parent"
@@ -28,3 +48,4 @@
 
     </android.support.v7.widget.RecyclerView>
 </FrameLayout>
+</LinearLayout>

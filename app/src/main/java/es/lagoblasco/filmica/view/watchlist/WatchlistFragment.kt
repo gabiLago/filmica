@@ -8,25 +8,25 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import es.lagoblasco.filmica.R
 import es.lagoblasco.filmica.data.Film
 import es.lagoblasco.filmica.data.FilmsRepo
 import es.lagoblasco.filmica.view.util.BaseFilmHolder
 import es.lagoblasco.filmica.view.util.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.fragment_watchlist.*
+import android.support.design.widget.Snackbar
+import android.widget.Toast
+
 
 class WatchlistFragment : Fragment() {
 
     val adapter: WatchlistAdapter = WatchlistAdapter {
-        showDetail(it)
+       showDetail(it)
     }
-
 
     private fun showDetail(film: Film) {
-
+        (activity as OnFilmClickListener).onClick(film)
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,11 +51,25 @@ class WatchlistFragment : Fragment() {
                 val film = (holder as BaseFilmHolder).film
                 val position = holder.adapterPosition
                 deleteFilm(film, position)
+
+                    // Snackbar for Undo Swipe Delete
+                    Snackbar.make(watchlist, "Deleted from Watchlist", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO") {
+                            FilmsRepo.saveFilm(context!!, film) {
+                                Toast.makeText(context, "Deletion from Watchlist undone", Toast.LENGTH_LONG).show()
+
+                                onResume() //It needs to refresh the load of the films.
+                            }
+                        }
+                        .show()
+
             }
         }
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(watchlist)
+
+
     }
 
 
@@ -71,5 +85,9 @@ class WatchlistFragment : Fragment() {
         FilmsRepo.getFilms(context!!) {
             adapter.setFilms(it)
         }
+    }
+
+    interface OnFilmClickListener {
+        fun onClick(film: Film)
     }
 }

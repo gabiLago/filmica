@@ -9,7 +9,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.view.inputmethod.InputMethodManager
+
 import es.lagoblasco.filmica.R
 import es.lagoblasco.filmica.data.Film
 import es.lagoblasco.filmica.data.FilmsRepo
@@ -24,12 +25,15 @@ class SearchFragment : Fragment() {
 
 
     lateinit var listener: OnFilmClickListener
+    var query: String = ""
 
 
     val list: RecyclerView by lazy {
         listFilms.addItemDecoration(GridOffsetDecoration())
         return@lazy listFilms
     }
+
+
 
     val adapter = FilmsAdapter {
         listener.onClick(it)
@@ -52,8 +56,8 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         val view = inflater.inflate(R.layout.fragment_search, container, false)
-         return view
+         return inflater.inflate(R.layout.fragment_search, container, false)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,58 +66,80 @@ class SearchFragment : Fragment() {
         list.adapter = adapter
 
         buttonRetry.setOnClickListener {
-            reload()
-
+            reload(query)
         }
 
-
-
-        moviesSearchBox.setHint("Probando desde onViewCreated")
-
-
-
-
+        moviesSearchListener()
     }
+
+
 
     override fun onResume() {
         super.onResume()
+        reload(query)
+    }
 
-        reload()
+    private fun reload(query: String) {
 
+       if(query != "") {
+           showProgress()
+
+           FilmsRepo.searchFilms(context!!,
+               { films ->
+
+                   adapter.setFilms(films)
+                   showList()
+                  /* if(films.size > 0) {
+                       showList()
+                   } else {
+                       noResults()
+                   }*/
+
+               }, { errorRequest ->
+                   showError()
+               },
+               query
+           )
+
+       } else {
+           initSearch()
+       }
 
     }
 
-    private fun reload() {
-        showProgress()
-
-        FilmsRepo.trendingFilms(context!!,
-            { films ->
-                adapter.setFilms(films)
-                showList()
-
-            }, { errorRequest ->
-                showError()
-            })
-
+    private fun initSearch() {
+        filmsProgress.visibility = View.INVISIBLE
+        error.visibility = View.INVISIBLE
+        list.visibility = View.INVISIBLE
+        //noResults.visibility = View.INVISIBLE
     }
-
 
     private fun showList() {
         filmsProgress.visibility = View.INVISIBLE
         error.visibility = View.INVISIBLE
         list.visibility = View.VISIBLE
+        //noResults.visibility = View.INVISIBLE
+    }
+
+    private fun noResults() {
+        //noResults.visibility = View.VISIBLE
+        filmsProgress.visibility = View.INVISIBLE
+        error.visibility = View.INVISIBLE
+        list.visibility = View.INVISIBLE
     }
 
     private fun showError() {
         filmsProgress.visibility = View.INVISIBLE
         list.visibility = View.INVISIBLE
         error.visibility = View.VISIBLE
+        //noResults.visibility = View.INVISIBLE
     }
 
     private fun showProgress() {
         filmsProgress.visibility = View.VISIBLE
         error.visibility = View.INVISIBLE
         list.visibility = View.INVISIBLE
+        //noResults.visibility = View.INVISIBLE
     }
 
 
@@ -121,12 +147,29 @@ class SearchFragment : Fragment() {
         fun onClick(film: Film)
     }
 
-    private fun searchLauncher(string: String) {
 
-            Toast.makeText(context, string, Toast.LENGTH_LONG).show()
+    private fun moviesSearchListener() {
+        moviesSearchBox.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
+                if (s.length > 0 && s.subSequence(s.length - 1, s.length)
+                        .toString().equals("\n", ignoreCase = true)
+                ) {  // If enter is pressed
 
+                    query = s.toString()
+                    reload(query)
+                    moviesSearchBox.hideKeyboard()
 
+                }
+            }
+        })
+    }
+
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
 }

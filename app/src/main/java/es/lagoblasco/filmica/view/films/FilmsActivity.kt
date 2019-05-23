@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
 import es.lagoblasco.filmica.R
 import es.lagoblasco.filmica.data.Film
+import es.lagoblasco.filmica.view.detail.PlaceholderFragment
 import es.lagoblasco.filmica.view.detail.DetailActivity
 import es.lagoblasco.filmica.view.detail.DetailFragment
 import es.lagoblasco.filmica.view.watchlist.WatchlistFragment
@@ -20,14 +21,15 @@ const val TAG_SEARCH = "search"
 class FilmsActivity : AppCompatActivity(),
     FilmsFragment.OnFilmClickListener,
     TrendingFragment.OnFilmClickListener,
-    SearchFragment.OnFilmClickListener
-{
+    SearchFragment.OnFilmClickListener,
+    WatchlistFragment.OnFilmClickListener {
 
     private lateinit var filmsFragment: FilmsFragment
     private lateinit var watchlistFragment: WatchlistFragment
     private lateinit var activeFragment: Fragment
     private lateinit var trendingFragment: TrendingFragment
     private lateinit var searchFragment: SearchFragment
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,9 @@ class FilmsActivity : AppCompatActivity(),
             .hide(trendingFragment)
             .hide(searchFragment)
             .commit()
+
+        showDetailPlaceholder()
+
     }
 
     private fun restoreFragments(tag: String) {
@@ -86,13 +91,10 @@ class FilmsActivity : AppCompatActivity(),
         activeFragment =
             if (tag == TAG_WATCHLIST)
                 watchlistFragment
-
             else if (tag == TAG_TRENDING)
                 trendingFragment
-
             else if (tag == TAG_SEARCH)
                 searchFragment
-
             else
                 filmsFragment
 
@@ -106,10 +108,23 @@ class FilmsActivity : AppCompatActivity(),
             .commit()
 
         activeFragment = fragment
+
+    }
+
+    private fun showDetailPlaceholder() {
+        if (isDetailDetailViewAvailable()) {
+            supportFragmentManager.beginTransaction()
+                .replace(
+                    R.id.container_detail,
+                    PlaceholderFragment()
+                )
+                .commit()
+        }
     }
 
     override fun onClick(film: Film) {
         if (!isDetailDetailViewAvailable()) {
+
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("id", film.id)
             startActivity(intent)

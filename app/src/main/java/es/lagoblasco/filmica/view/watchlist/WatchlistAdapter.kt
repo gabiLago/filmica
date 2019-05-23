@@ -1,6 +1,5 @@
 package es.lagoblasco.filmica.view.watchlist
 
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.support.v4.content.ContextCompat

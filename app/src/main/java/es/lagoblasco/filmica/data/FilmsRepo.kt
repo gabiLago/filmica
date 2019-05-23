@@ -127,4 +127,28 @@ object FilmsRepo {
         Volley.newRequestQueue(context)
             .add(request)
     }
+
+    fun searchFilms(
+        context: Context,
+        onResponse: (List<Film>) -> Unit,
+        onError: (VolleyError) -> Unit,
+        query: String
+    ) {
+        val url = ApiRoutes.searchFilmsUrl(query)
+        val request = JsonObjectRequest(Request.Method.GET, url, null,
+            { response ->
+                val films = Film.parseFilms(response.getJSONArray("results"))
+                FilmsRepo.films.clear()
+                FilmsRepo.films.addAll(films)
+                onResponse.invoke(FilmsRepo.films)
+            },
+            { error ->
+                error.printStackTrace()
+                onError.invoke(error)
+            }
+        )
+
+        Volley.newRequestQueue(context)
+            .add(request)
+    }
 }

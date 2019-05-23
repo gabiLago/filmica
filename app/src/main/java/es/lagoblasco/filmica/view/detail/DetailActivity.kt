@@ -20,7 +20,7 @@ class DetailActivity : AppCompatActivity() {
             fragment.arguments = args
 
             supportFragmentManager.beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.containerDetail, fragment)
                 .commit()
 
         }

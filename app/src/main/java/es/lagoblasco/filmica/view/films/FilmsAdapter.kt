@@ -3,10 +3,7 @@ package es.lagoblasco.filmica.view.films
 import android.graphics.Bitmap
 import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import es.lagoblasco.filmica.R
 import es.lagoblasco.filmica.data.Film

@@ -2,11 +2,14 @@ package es.lagoblasco.filmica.view.util
 
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
+import android.widget.Toast
 import es.lagoblasco.filmica.R
+import es.lagoblasco.filmica.data.FilmsRepo
 
 abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
