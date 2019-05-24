@@ -13,9 +13,11 @@ class DetailActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             val fragment = DetailFragment()
             val id = intent.getStringExtra("id")
+            val fromFragment = intent.getStringExtra("fromFragment")
 
             val args = Bundle()
             args.putString("id", id)
+            args.putString("fromFragment", fromFragment)
 
             fragment.arguments = args
 

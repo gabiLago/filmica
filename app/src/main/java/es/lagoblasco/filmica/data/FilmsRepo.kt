@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 object FilmsRepo {
 
     private val films: MutableList<Film> = mutableListOf()
+    private val trendingFilms: MutableList<Film> = mutableListOf()
+    private val searchResults: MutableList<Film> = mutableListOf()
 
     private var db: FilmDatabase? = null
 
@@ -29,8 +31,19 @@ object FilmsRepo {
         return db as FilmDatabase
     }
 
-    fun findFilmById(id: String): Film? {
-        return films.find {
+    fun findFilmById(id: String, fromFragment: String): Film? {
+        var currentFilmsList: MutableList<Film> = mutableListOf()
+
+        if (fromFragment == "films") {
+            currentFilmsList = films
+        } else if (fromFragment == "trending") {
+            currentFilmsList = trendingFilms
+        } else if (fromFragment == "search") {
+            currentFilmsList = searchResults
+        }
+
+
+        return currentFilmsList.find {
             return@find it.id == id
         }
 
@@ -71,15 +84,15 @@ object FilmsRepo {
         film: Film,
         callback: (Film) -> Unit
     ) {
-       GlobalScope.launch(Dispatchers.Main) {
-           val async = async(Dispatchers.IO) {
-               val db = getDbInstance(context)
-               db.filmDao().deleteFilm(film)
-           }
+        GlobalScope.launch(Dispatchers.Main) {
+            val async = async(Dispatchers.IO) {
+                val db = getDbInstance(context)
+                db.filmDao().deleteFilm(film)
+            }
 
-           async.await()
-           callback.invoke(film)
-       }
+            async.await()
+            callback.invoke(film)
+        }
     }
 
     fun discoverFilms(
@@ -114,10 +127,10 @@ object FilmsRepo {
         val url = ApiRoutes.trendingFilmsUrl()
         val request = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
-                val films = Film.parseFilms(response.getJSONArray("results"))
-                FilmsRepo.films.clear()
-                FilmsRepo.films.addAll(films)
-                onResponse.invoke(FilmsRepo.films)
+                val trendingFilms = Film.parseFilms(response.getJSONArray("results"))
+                FilmsRepo.trendingFilms.clear()
+                FilmsRepo.trendingFilms.addAll(trendingFilms)
+                onResponse.invoke(FilmsRepo.trendingFilms)
             },
             { error ->
                 error.printStackTrace()
@@ -139,10 +152,10 @@ object FilmsRepo {
         val url = ApiRoutes.searchFilmsUrl(query)
         val request = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
-                val films = Film.parseFilms(response.getJSONArray("results"))
-                FilmsRepo.films.clear()
-                FilmsRepo.films.addAll(films)
-                onResponse.invoke(FilmsRepo.films)
+                val searchResultsFilms = Film.parseFilms(response.getJSONArray("results"))
+                FilmsRepo.searchResults.clear()
+                FilmsRepo.searchResults.addAll(searchResultsFilms)
+                onResponse.invoke(FilmsRepo.searchResults)
             },
             { error ->
                 error.printStackTrace()

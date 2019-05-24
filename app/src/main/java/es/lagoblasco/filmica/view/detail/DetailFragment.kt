@@ -24,10 +24,11 @@ class DetailFragment : Fragment() {
     var film: Film? = null
 
     companion object {
-        fun newInstance(filId: String): DetailFragment {
+        fun newInstance(filId: String, fromFragment: String): DetailFragment {
             val fragment = DetailFragment()
             val bundle = Bundle()
             bundle.putString("id", filId)
+            bundle.putString("fromFragment", fromFragment)
             fragment.arguments = bundle
 
             return fragment
@@ -53,7 +54,7 @@ class DetailFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.action_share) {
+        if (item.itemId == R.id.action_share) {
             shareFilm()
         }
         return super.onOptionsItemSelected(item)
@@ -75,7 +76,11 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val id = arguments?.getString("id", "")
-        film = FilmsRepo.findFilmById(id!!)
+        val fromFragment = arguments?.getString("fromFragment", "").toString()
+
+
+
+        film = FilmsRepo.findFilmById(id!!, fromFragment)
 
         film?.let {
             labelTitle.text = it.title
@@ -90,7 +95,7 @@ class DetailFragment : Fragment() {
         buttonAdd.setOnClickListener {
             film?.let {
                 FilmsRepo.saveFilm(context!!, it) {
-                Toast.makeText(context, "Añadido al watchlist", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Añadido al watchlist", Toast.LENGTH_LONG).show()
                 }
             }
 

@@ -112,6 +112,10 @@ class FilmsActivity : AppCompatActivity(),
 
     }
 
+    /*
+    //In case of using another fragment for the placeholder
+    //instead of messing with the container background
+
     private fun showDetailPlaceholder() {
         if (isDetailDetailViewAvailable()) {
             supportFragmentManager.beginTransaction()
@@ -122,19 +126,28 @@ class FilmsActivity : AppCompatActivity(),
                 .commit()
         }
     }
+    */
 
     override fun onClick(film: Film) {
+        val testFragment = activeFragment.getTag().toString()
         if (!isDetailDetailViewAvailable()) {
+
+
 
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("id", film.id)
+            intent.putExtra("fromFragment", testFragment )
+
             startActivity(intent)
+
         } else {
+            // Hiding the placeholder on the container background, avoiding using another fragment
             container_detail.setBackgroundColor(Color.WHITE)
+
             supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.container_detail,
-                    DetailFragment.newInstance(film.id)
+                    DetailFragment.newInstance(film.id, testFragment)
                 )
                 .commit()
         }
