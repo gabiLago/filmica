@@ -16,6 +16,7 @@ object ApiRoutes {
             .appendQueryParameter("sort_by", sort)
             .appendQueryParameter("include_adult", "false")
             .appendQueryParameter("include_video", "false")
+            .appendQueryParameter("page", "2")
             .build()
             .toString()
     }
