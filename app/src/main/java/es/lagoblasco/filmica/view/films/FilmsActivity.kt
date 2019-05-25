@@ -77,7 +77,7 @@ class FilmsActivity : AppCompatActivity(),
             .hide(searchFragment)
             .commit()
 
-        showDetailFragmentPlaceholder()
+            showDetailFragmentPlaceholder()
 
     }
 
@@ -107,8 +107,18 @@ class FilmsActivity : AppCompatActivity(),
             .show(fragment)
             .commit()
 
-        activeFragment = fragment
+       activeFragment = fragment
 
+        if (isDetailDetailViewAvailable()) {
+            showDetailFragmentPlaceholder() // Avoid showing last Detail when changing menu item
+
+            if(fragment == watchlistFragment){ // Watchlist did't refresh the view
+                supportFragmentManager.beginTransaction()
+                    .detach(fragment)
+                    .attach(fragment)
+                    .commit()
+            }
+        }
     }
 
 
@@ -134,6 +144,7 @@ class FilmsActivity : AppCompatActivity(),
             intent.putExtra("fromFragment", testFragment)
 
             startActivity(intent)
+
 
         } else {
 

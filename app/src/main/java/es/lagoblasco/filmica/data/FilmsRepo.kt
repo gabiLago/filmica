@@ -67,7 +67,7 @@ object FilmsRepo {
         }
     }
 
-    fun getFilms(context: Context, callback: (List<Film>) -> Unit = {}) {
+    fun getFilms(context: Context, callback: (List<Film>) -> Unit) {
         // Refactored to store and retrieve watchlist items in DB
 
         GlobalScope.launch(Dispatchers.Main) {

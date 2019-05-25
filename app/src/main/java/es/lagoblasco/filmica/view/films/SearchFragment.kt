@@ -4,15 +4,10 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-
 import es.lagoblasco.filmica.R
 import es.lagoblasco.filmica.data.Film
 import es.lagoblasco.filmica.data.FilmsRepo
@@ -25,7 +20,6 @@ import java.lang.IllegalArgumentException
 class SearchFragment : Fragment() {
 
 
-
     lateinit var listener: OnFilmClickListener
     var query: String = ""
 
@@ -34,7 +28,6 @@ class SearchFragment : Fragment() {
         listFilms.addItemDecoration(GridOffsetDecoration())
         return@lazy listFilms
     }
-
 
 
     val adapter = FilmsAdapter {
@@ -58,7 +51,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         return inflater.inflate(R.layout.fragment_search, container, false)
+        return inflater.inflate(R.layout.fragment_search, container, false)
 
     }
 
@@ -75,7 +68,6 @@ class SearchFragment : Fragment() {
     }
 
 
-
     override fun onResume() {
         super.onResume()
         reload(query)
@@ -83,29 +75,29 @@ class SearchFragment : Fragment() {
 
     private fun reload(query: String) {
 
-       if(query != "") {
-           showProgress()
+        if (query != "") {
+            showProgress()
 
-           FilmsRepo.searchFilms(context!!,
-               { films ->
+            FilmsRepo.searchFilms(context!!,
+                { films ->
 
-                   adapter.setFilms(films)
-                   showList()
-                   if(films.size > 0) {
-                       showList()
-                   } else {
-                       noResults()
-                   }
+                    adapter.setFilms(films)
+                    showList()
+                    if (films.size > 0) {
+                        showList()
+                    } else {
+                        noResults()
+                    }
 
-               }, { errorRequest ->
-                   showError()
-               },
-               query
-           )
+                }, { errorRequest ->
+                    showError()
+                },
+                query
+            )
 
-       } else {
-           initSearch()
-       }
+        } else {
+            initSearch()
+        }
 
     }
 
@@ -150,19 +142,7 @@ class SearchFragment : Fragment() {
     }
 
 
-
-
     private fun moviesSearchListener() {
-        /* moviesSearchBox.setOnClickListener {
-
-
-            query = moviesSearchBox.text.toString()
-
-            Toast.makeText(context, query, Toast.LENGTH_LONG).show()
-
-            reload(query)
-
-        }*/
 
         moviesSearchBox.setOnEditorActionListener() { v, actionId, event ->
             query = moviesSearchBox.text.toString()

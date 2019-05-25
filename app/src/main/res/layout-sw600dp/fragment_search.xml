@@ -4,48 +4,53 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="horizontal">
+              android:orientation="vertical">
+
     <EditText
             android:id="@+id/moviesSearchBox"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_search_backgorund"
-            android:drawableLeft="@drawable/ic_search_backgorund"/>
+            android:drawableLeft="@drawable/ic_search_backgorund"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:maxLines="1" />
 
-<FrameLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
-
-    <ProgressBar
-            android:id="@+id/filmsProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="visible"/>
-
-    <include
-            android:id="@+id/error"
-            layout="@layout/layout_error"
-            android:visibility="invisible"/>
-
-    <TextView
-            android:id="@+id/noResults"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_results"
-            android:visibility="invisible"
-            android:layout_gravity="center"
-            android:textSize="20sp"/>
-
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/listFilms"
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
-            app:layoutManager="android.support.v7.widget.GridLayoutManager"
-            app:spanCount="3"
-            tools:listitem="@layout/item_film">
+            android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
-</FrameLayout>
+
+        <ProgressBar
+                android:id="@+id/filmsProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="visible"/>
+
+        <include
+                android:id="@+id/error"
+                layout="@layout/layout_error"
+                android:visibility="invisible"/>
+
+        <TextView
+                android:id="@+id/noResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_results"
+                android:visibility="invisible"
+                android:layout_gravity="center"
+                android:textSize="20sp"/>
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/listFilms"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                app:layoutManager="android.support.v7.widget.GridLayoutManager"
+                app:spanCount="3"
+                tools:listitem="@layout/item_film">
+
+        </android.support.v7.widget.RecyclerView>
+    </FrameLayout>
 </LinearLayout>
