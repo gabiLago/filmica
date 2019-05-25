@@ -16,6 +16,7 @@ object FilmsRepo {
     private val films: MutableList<Film> = mutableListOf()
     private val trendingFilms: MutableList<Film> = mutableListOf()
     private val searchResults: MutableList<Film> = mutableListOf()
+    private val filmsOnDatabase: MutableList<Film> = mutableListOf()
 
     private var db: FilmDatabase? = null
 
@@ -40,6 +41,8 @@ object FilmsRepo {
             currentFilmsList = trendingFilms
         } else if (fromFragment == "search") {
             currentFilmsList = searchResults
+        } else {
+            currentFilmsList = filmsOnDatabase
         }
 
 
@@ -64,20 +67,25 @@ object FilmsRepo {
         }
     }
 
-    fun getFilms(
-        context: Context,
-        callback: (List<Film>) -> Unit
-    ) {
+    fun getFilms(context: Context, callback: (List<Film>) -> Unit = {}) {
+        // Refactored to store and retrieve watchlist items in DB
+
         GlobalScope.launch(Dispatchers.Main) {
             val async = async(Dispatchers.IO) {
-                var db = getDbInstance(context)
+                val db = getDbInstance(context)
                 db.filmDao().getFilms()
             }
-
             val films = async.await()
-            callback.invoke(films)
+
+            //CLean an add to db
+            filmsOnDatabase.clear()
+            filmsOnDatabase.addAll(films)
+
+            //Compose the mutable list, thus it can called from Detail by its id
+            callback.invoke(FilmsRepo.filmsOnDatabase)
         }
     }
+
 
     fun deleteFilm(
         context: Context,
@@ -166,5 +174,6 @@ object FilmsRepo {
         Volley.newRequestQueue(context)
             .add(request)
     }
+
 
 }

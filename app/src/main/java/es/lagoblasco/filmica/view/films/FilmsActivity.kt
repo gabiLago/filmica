@@ -1,7 +1,6 @@
 package es.lagoblasco.filmica.view.films
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -23,7 +22,7 @@ class FilmsActivity : AppCompatActivity(),
     FilmsFragment.OnFilmClickListener,
     TrendingFragment.OnFilmClickListener,
     SearchFragment.OnFilmClickListener,
-    WatchlistFragment.OnFilmClickListener {
+    WatchlistFragment.OnWatchlistClickListener {
 
     private lateinit var filmsFragment: FilmsFragment
     private lateinit var watchlistFragment: WatchlistFragment
@@ -78,7 +77,7 @@ class FilmsActivity : AppCompatActivity(),
             .hide(searchFragment)
             .commit()
 
-        //showDetailPlaceholder()
+        showDetailFragmentPlaceholder()
 
     }
 
@@ -112,11 +111,8 @@ class FilmsActivity : AppCompatActivity(),
 
     }
 
-    /*
-    //In case of using another fragment for the placeholder
-    //instead of messing with the container background
 
-    private fun showDetailPlaceholder() {
+    private fun showDetailFragmentPlaceholder() {
         if (isDetailDetailViewAvailable()) {
             supportFragmentManager.beginTransaction()
                 .replace(
@@ -126,23 +122,20 @@ class FilmsActivity : AppCompatActivity(),
                 .commit()
         }
     }
-    */
+
 
     override fun onClick(film: Film) {
         val testFragment = activeFragment.getTag().toString()
         if (!isDetailDetailViewAvailable()) {
 
 
-
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("id", film.id)
-            intent.putExtra("fromFragment", testFragment )
+            intent.putExtra("fromFragment", testFragment)
 
             startActivity(intent)
 
         } else {
-            // Hiding the placeholder on the container background, avoiding using another fragment
-            container_detail.setBackgroundColor(Color.WHITE)
 
             supportFragmentManager.beginTransaction()
                 .replace(
@@ -152,6 +145,7 @@ class FilmsActivity : AppCompatActivity(),
                 .commit()
         }
     }
+
 
     private fun isDetailDetailViewAvailable() =
         findViewById<FrameLayout>(R.id.container_detail) != null

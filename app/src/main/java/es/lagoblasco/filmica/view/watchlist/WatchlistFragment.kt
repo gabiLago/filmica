@@ -1,6 +1,7 @@
 package es.lagoblasco.filmica.view.watchlist
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
@@ -20,17 +21,24 @@ import android.widget.Toast
 
 class WatchlistFragment : Fragment() {
 
-    val adapter: WatchlistAdapter = WatchlistAdapter {
-       showDetail(it)
+    lateinit var listener: OnWatchlistClickListener
+
+    val adapter: WatchlistAdapter = WatchlistAdapter { film ->
+        listener.onClick(film)
     }
 
-    private fun showDetail(film: Film) {
-        (activity as OnFilmClickListener).onClick(film)
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is OnWatchlistClickListener) {
+            listener = context
+        } else {
+            throw IllegalArgumentException("The attached context does not implement ${OnWatchlistClickListener::class.java.canonicalName}")
+        }
     }
+
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_watchlist, container, false)
@@ -38,11 +46,9 @@ class WatchlistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupSwipeHandler()
         watchlist.adapter = adapter
     }
-
 
 
     private fun setupSwipeHandler() {
@@ -52,16 +58,16 @@ class WatchlistFragment : Fragment() {
                 val position = holder.adapterPosition
                 deleteFilm(film, position)
 
-                    // Snackbar for Undo Swipe Delete
-                    Snackbar.make(watchlist, "Deleted from Watchlist", Snackbar.LENGTH_LONG)
-                        .setAction("UNDO") {
-                            FilmsRepo.saveFilm(context!!, film) {
-                                Toast.makeText(context, "Deletion from Watchlist undone", Toast.LENGTH_LONG).show()
+                // Snackbar for Undo Swipe Delete
+                Snackbar.make(watchlist, "Deleted from Watchlist", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO") {
+                        FilmsRepo.saveFilm(context!!, film) {
+                            Toast.makeText(context, "Deletion from Watchlist undone", Toast.LENGTH_LONG).show()
 
-                                onResume() //It needs to refresh the load of the films.
-                            }
+                            onResume() //It needs to refresh the load of the films.
                         }
-                        .show()
+                    }
+                    .show()
 
             }
         }
@@ -69,11 +75,10 @@ class WatchlistFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(watchlist)
 
-
     }
 
 
-    private fun deleteFilm(film: Film, position: Int){
+    private fun deleteFilm(film: Film, position: Int) {
         FilmsRepo.deleteFilm(context!!, film) {
             adapter.deleteFilm(position)
         }
@@ -87,7 +92,7 @@ class WatchlistFragment : Fragment() {
         }
     }
 
-    interface OnFilmClickListener {
+    interface OnWatchlistClickListener {
         fun onClick(film: Film)
     }
 }
