@@ -3,6 +3,7 @@ package es.lagoblasco.filmica.view.detail
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import es.lagoblasco.filmica.R
+import es.lagoblasco.filmica.data.FilmsRepo
 
 class DetailActivity : AppCompatActivity() {
 
@@ -27,4 +28,5 @@ class DetailActivity : AppCompatActivity() {
 
         }
     }
+
 }

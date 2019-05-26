@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
@@ -95,7 +96,15 @@ class DetailFragment : Fragment() {
         buttonAdd.setOnClickListener {
             film?.let {
                 FilmsRepo.saveFilm(context!!, it) {
-                    Toast.makeText(context, "Añadido al watchlist", Toast.LENGTH_LONG).show()
+
+                    // Snackbar for Undo
+                    Snackbar.make(imgPoster, "Added to Watchlist", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO") {
+                            FilmsRepo.deleteFilm(context!!, film!!) {
+                                Toast.makeText(context, "Watchlist added undone", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        .show()
                 }
             }
 

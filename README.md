@@ -31,3 +31,17 @@
 
 ## NOTES ON THE EXERCISE
 This is an exercice for the 8th Mobile Development Bootcamp from KeepCoding.
+
+1. Trending Films
+*
+2. Films Search
+*
+3. Tending Films, Watchlist and Search Results Detail View
+*
+4. Undo for deleting and saving films
+* Delete implemented
+5. Placeholder for the Detail Section on Landscape tablet
+* New fragment called to replace the detail view from FilmsActivity when needed.
+6. Trends and Discover Paging
+* I haven´t been able to develop nothing here
+ 
