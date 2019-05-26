@@ -78,7 +78,9 @@ class SearchFragment : Fragment() {
         if (query != "") {
             showProgress()
 
-            FilmsRepo.searchFilms(context!!,
+            FilmsRepo.getParsedFilms(
+                context!!,
+                "Search",
                 { films ->
 
                     adapter.setFilms(films)

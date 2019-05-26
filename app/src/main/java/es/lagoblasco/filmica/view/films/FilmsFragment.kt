@@ -31,6 +31,8 @@ class FilmsFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
+
+
         if (context is OnFilmClickListener) {
             listener = context
         } else {
@@ -63,7 +65,8 @@ class FilmsFragment : Fragment() {
     private fun reload() {
         showProgress()
 
-        FilmsRepo.discoverFilms(context!!,
+        FilmsRepo.getParsedFilms(context!!,
+            "discoverFilms",
             { films ->
                 adapter.setFilms(films)
                 showList()

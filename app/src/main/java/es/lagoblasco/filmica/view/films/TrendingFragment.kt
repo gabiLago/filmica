@@ -64,7 +64,8 @@ class TrendingFragment : Fragment() {
         showProgress()
 
 
-        FilmsRepo.trendingFilms(context!!,
+        FilmsRepo.getParsedFilms(context!!,
+            "trendingFilms",
             { trendingFilms ->
                 adapter.setFilms(trendingFilms)
                 showList()

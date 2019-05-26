@@ -17,22 +17,26 @@ import es.lagoblasco.filmica.view.util.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.fragment_watchlist.*
 import android.support.design.widget.Snackbar
 import android.widget.Toast
+import es.lagoblasco.filmica.view.films.FilmsActivity
 
 
 class WatchlistFragment : Fragment() {
 
     lateinit var listener: OnWatchlistClickListener
+    lateinit var deleteListener: OnDeletedWatchlistFilm
 
-    val adapter: WatchlistAdapter = WatchlistAdapter { film ->
-        listener.onClick(film)
+    val adapter: WatchlistAdapter = WatchlistAdapter {
+            film -> listener.onClick(film)
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnWatchlistClickListener) {
+
+        if (context is OnWatchlistClickListener && context is OnDeletedWatchlistFilm) {
             listener = context
+            deleteListener = context
         } else {
-            throw IllegalArgumentException("The attached context does not implement ${OnWatchlistClickListener::class.java.canonicalName}")
+            throw IllegalArgumentException("The attached activity isn't implementing ${OnWatchlistClickListener::class.java.canonicalName} or ${OnDeletedWatchlistFilm::class.java.canonicalName} ")
         }
     }
 
@@ -58,6 +62,8 @@ class WatchlistFragment : Fragment() {
                 val position = holder.adapterPosition
                 deleteFilm(film, position)
 
+                deleteListener.onDeleted()
+
                 // Snackbar for Undo Swipe Delete
                 Snackbar.make(watchlist, "Deleted from Watchlist", Snackbar.LENGTH_LONG)
                     .setAction("UNDO") {
@@ -82,6 +88,8 @@ class WatchlistFragment : Fragment() {
         FilmsRepo.deleteFilm(context!!, film) {
             adapter.deleteFilm(position)
         }
+
+
     }
 
     override fun onResume() {
@@ -94,5 +102,9 @@ class WatchlistFragment : Fragment() {
 
     interface OnWatchlistClickListener {
         fun onClick(film: Film)
+    }
+
+    interface OnDeletedWatchlistFilm {
+        fun onDeleted()
     }
 }

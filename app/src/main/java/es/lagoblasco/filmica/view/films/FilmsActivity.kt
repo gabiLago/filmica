@@ -22,7 +22,8 @@ class FilmsActivity : AppCompatActivity(),
     FilmsFragment.OnFilmClickListener,
     TrendingFragment.OnFilmClickListener,
     SearchFragment.OnFilmClickListener,
-    WatchlistFragment.OnWatchlistClickListener {
+    WatchlistFragment.OnWatchlistClickListener,
+    WatchlistFragment.OnDeletedWatchlistFilm {
 
     private lateinit var filmsFragment: FilmsFragment
     private lateinit var watchlistFragment: WatchlistFragment
@@ -77,7 +78,7 @@ class FilmsActivity : AppCompatActivity(),
             .hide(searchFragment)
             .commit()
 
-            showDetailFragmentPlaceholder()
+        showDetailFragmentPlaceholder()
 
     }
 
@@ -98,6 +99,9 @@ class FilmsActivity : AppCompatActivity(),
             else
                 filmsFragment
 
+        if (isDetailDetailViewAvailable()) {
+            showDetailFragmentPlaceholder()
+        }
 
     }
 
@@ -107,12 +111,12 @@ class FilmsActivity : AppCompatActivity(),
             .show(fragment)
             .commit()
 
-       activeFragment = fragment
+        activeFragment = fragment
 
         if (isDetailDetailViewAvailable()) {
             showDetailFragmentPlaceholder() // Avoid showing last Detail when changing menu item
 
-            if(fragment == watchlistFragment){ // Watchlist did't refresh the view
+            if (fragment == watchlistFragment) { // Watchlist did't refresh the view
                 supportFragmentManager.beginTransaction()
                     .detach(fragment)
                     .attach(fragment)
@@ -155,6 +159,10 @@ class FilmsActivity : AppCompatActivity(),
                 )
                 .commit()
         }
+    }
+
+    override fun onDeleted() {
+        showDetailFragmentPlaceholder()
     }
 
 

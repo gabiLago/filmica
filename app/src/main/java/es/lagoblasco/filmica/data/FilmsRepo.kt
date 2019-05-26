@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 object FilmsRepo {
 
-    private val films: MutableList<Film> = mutableListOf()
+    private val discoverFilms: MutableList<Film> = mutableListOf()
     private val trendingFilms: MutableList<Film> = mutableListOf()
     private val searchResults: MutableList<Film> = mutableListOf()
     private val filmsOnDatabase: MutableList<Film> = mutableListOf()
@@ -35,14 +35,11 @@ object FilmsRepo {
     fun findFilmById(id: String, fromFragment: String): Film? {
         var currentFilmsList: MutableList<Film> = mutableListOf()
 
-        if (fromFragment == "films") {
-            currentFilmsList = films
-        } else if (fromFragment == "trending") {
-            currentFilmsList = trendingFilms
-        } else if (fromFragment == "search") {
-            currentFilmsList = searchResults
-        } else {
-            currentFilmsList = filmsOnDatabase
+        when (fromFragment) {
+            "films" -> currentFilmsList = discoverFilms
+            "trending" -> currentFilmsList = trendingFilms
+            "search" -> currentFilmsList = searchResults
+            else -> currentFilmsList = filmsOnDatabase
         }
 
 
@@ -103,18 +100,41 @@ object FilmsRepo {
         }
     }
 
-    fun discoverFilms(
+    fun getParsedFilms(
         context: Context,
+        forSection: String,
         onResponse: (List<Film>) -> Unit,
-        onError: (VolleyError) -> Unit
+        onError: (VolleyError) -> Unit,
+        query: String = ""
     ) {
-        val url = ApiRoutes.discoverMoviesUrl()
+
+        var listToFill: MutableList<Film> = mutableListOf()
+        var url : String = ""
+
+        when (forSection) {
+            "discoverFilms" -> {
+                listToFill = discoverFilms
+                url = ApiRoutes.discoverMoviesUrl()
+            }
+
+            "trendingFilms" -> {
+                listToFill = trendingFilms
+                url = ApiRoutes.trendingFilmsUrl()
+            }
+
+            "Search" -> {
+                listToFill = filmsOnDatabase
+                url = ApiRoutes.searchFilmsUrl(query)
+            }
+        }
+
+
         val request = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
                 val films = Film.parseFilms(response.getJSONArray("results"))
-                FilmsRepo.films.clear()
-                FilmsRepo.films.addAll(films)
-                onResponse.invoke(FilmsRepo.films)
+                listToFill.clear()
+                listToFill.addAll(films)
+                onResponse.invoke(listToFill)
             },
             { error ->
                 error.printStackTrace()
@@ -125,55 +145,4 @@ object FilmsRepo {
         Volley.newRequestQueue(context)
             .add(request)
     }
-
-    fun trendingFilms(
-        context: Context,
-        onResponse: (List<Film>) -> Unit,
-        onError: (VolleyError) -> Unit
-    ) {
-
-        val url = ApiRoutes.trendingFilmsUrl()
-        val request = JsonObjectRequest(Request.Method.GET, url, null,
-            { response ->
-                val trendingFilms = Film.parseFilms(response.getJSONArray("results"))
-                FilmsRepo.trendingFilms.clear()
-                FilmsRepo.trendingFilms.addAll(trendingFilms)
-                onResponse.invoke(FilmsRepo.trendingFilms)
-            },
-            { error ->
-                error.printStackTrace()
-                onError.invoke(error)
-            }
-        )
-
-        Volley.newRequestQueue(context)
-            .add(request)
-    }
-
-    fun searchFilms(
-        context: Context,
-        onResponse: (List<Film>) -> Unit,
-        onError: (VolleyError) -> Unit,
-        query: String
-    ) {
-
-        val url = ApiRoutes.searchFilmsUrl(query)
-        val request = JsonObjectRequest(Request.Method.GET, url, null,
-            { response ->
-                val searchResultsFilms = Film.parseFilms(response.getJSONArray("results"))
-                FilmsRepo.searchResults.clear()
-                FilmsRepo.searchResults.addAll(searchResultsFilms)
-                onResponse.invoke(FilmsRepo.searchResults)
-            },
-            { error ->
-                error.printStackTrace()
-                onError.invoke(error)
-            }
-        )
-
-        Volley.newRequestQueue(context)
-            .add(request)
-    }
-
-
 }
