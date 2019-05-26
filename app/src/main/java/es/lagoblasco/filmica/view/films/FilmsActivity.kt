@@ -162,7 +162,9 @@ class FilmsActivity : AppCompatActivity(),
     }
 
     override fun onDeleted() {
-        showDetailFragmentPlaceholder()
+        if (isDetailDetailViewAvailable()) {
+            showDetailFragmentPlaceholder()
+        }
     }
 
 

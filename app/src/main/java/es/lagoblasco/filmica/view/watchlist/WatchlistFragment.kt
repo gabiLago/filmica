@@ -61,6 +61,8 @@ class WatchlistFragment : Fragment() {
                 val position = holder.adapterPosition
                 deleteFilm(film, position)
 
+                // Avoids still showing the detail of an item
+                // after having delete it on swipe
                 onDeleteItemListener.onDeleted()
 
                 // Snackbar for Undo Swipe Delete
